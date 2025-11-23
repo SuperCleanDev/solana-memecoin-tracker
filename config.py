@@ -21,7 +21,7 @@ ANALYSIS_WINDOW = {
     
     # Track each token for 24 hours from its launch
     # Even if it's outside the UI window
-    'tracking_duration_hours': 24,
+    'tracking_duration_hours': 18,
 }
 
 # ============================================
