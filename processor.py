@@ -243,42 +243,67 @@ class TokenProcessor:
             "entry_end": entry_end_dt.strftime(config.DATETIME_FORMAT)
         }
     
-    def _generate_summary(self, start_dt, end_dt, enriched, successful, failed):
-        """Generate summary statistics"""
-        # ROI breakdown for successful tokens
-        roi_50_79 = len([t for t in enriched if 50 <= t.get('roi_from_entry_end', 0) < 80])
-        roi_80_plus = len([t for t in enriched if t.get('roi_from_entry_end', 0) >= 80])
-        
-        # Failure type breakdown
-        pump_dump_count = 0
-        rug_pull_count = 0
-        
-        for t in enriched:
-            if self._is_pump_dump(t):
-                pump_dump_count += 1
-            if self._is_rug_pull(t):
-                rug_pull_count += 1
-        
+        def _generate_summary(self, start_dt, end_dt, enriched, successful, failed):
+    """Generate summary statistics"""
+    
+    # Handle case when no tokens were enriched
+    if not enriched:
         return {
             "date": start_dt.strftime(config.DATE_FORMAT),
             "analysis_window": f"{start_dt.strftime('%H:%M')} to {end_dt.strftime('%H:%M')} UTC",
             "tracking_duration_hours": config.ANALYSIS_WINDOW['tracking_duration_hours'],
-            "total_tokens_analyzed": len(enriched),
+            "total_tokens_analyzed": 0,
             "successful_tokens": {
-                "total": len(successful),
+                "total": 0,
                 "breakdown": {
-                    "50x_to_79x": roi_50_79,
-                    "80x_plus": roi_80_plus
+                    "50x_to_79x": 0,
+                    "80x_plus": 0
                 }
             },
             "failed_tokens": {
-                "total": len(failed),
+                "total": 0,
                 "breakdown": {
-                    "pump_and_dump": pump_dump_count,
-                    "rug_pull": rug_pull_count
+                    "pump_and_dump": 0,
+                    "rug_pull": 0
                 }
+            },
+            "warning": "No tokens were found or successfully enriched. Try a different date or time range."
+        }
+    
+    # ROI breakdown for successful tokens
+    roi_50_79 = len([t for t in enriched if 50 <= t.get('roi_from_entry_end', 0) < 80])
+    roi_80_plus = len([t for t in enriched if t.get('roi_from_entry_end', 0) >= 80])
+    
+    # Failure type breakdown
+    pump_dump_count = 0
+    rug_pull_count = 0
+    
+    for t in enriched:
+        if self._is_pump_dump(t):
+            pump_dump_count += 1
+        if self._is_rug_pull(t):
+            rug_pull_count += 1
+    
+    return {
+        "date": start_dt.strftime(config.DATE_FORMAT),
+        "analysis_window": f"{start_dt.strftime('%H:%M')} to {end_dt.strftime('%H:%M')} UTC",
+        "tracking_duration_hours": config.ANALYSIS_WINDOW['tracking_duration_hours'],
+        "total_tokens_analyzed": len(enriched),
+        "successful_tokens": {
+            "total": len(successful),
+            "breakdown": {
+                "50x_to_79x": roi_50_79,
+                "80x_plus": roi_80_plus
+            }
+        },
+        "failed_tokens": {
+            "total": len(failed),
+            "breakdown": {
+                "pump_and_dump": pump_dump_count,
+                "rug_pull": rug_pull_count
             }
         }
+    }
     
     def _is_pump_dump(self, token):
         """Check if token is pump & dump"""
