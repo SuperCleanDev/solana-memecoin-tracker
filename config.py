@@ -31,12 +31,12 @@ ANALYSIS_WINDOW = {
 SUCCESSFUL_TOKEN_CONFIG = {
     # Entry window definition
     'entry_start': 'launch_time',           # Always the exact launch time
-    'entry_end_mc_threshold': 25000,        # When MC hits $25K (entry window closes)
+    'entry_end_mc_threshold': 20000,        # When MC hits $25K (entry window closes)
     'entry_end_fallback_minutes': 5,        # If launches above $25K: use launch + 5 mins
     
     # Success criteria (MINIMUMS - no upper limits)
     'min_roi_multiplier': 50,               # Must do at least 50x from entry_end
-    'min_peak_mc': 1250000,                 # Must hit at least $1.25M (50x of $25K)
+    'min_peak_mc': 1000000,                 # Must hit at least $1.25M (50x of $25K)
     
     # Holder snapshot timing
     'holder_snapshot_before_peak_minutes': 10,  # Snapshot 10 mins before peak
@@ -78,8 +78,8 @@ FAILED_TOKEN_CONFIG = {
 # ============================================
 
 # Maximum tokens to save per category
-MAX_SUCCESSFUL_TOKENS = 50
-MAX_FAILED_TOKENS = 100
+MAX_SUCCESSFUL_TOKENS = 200
+MAX_FAILED_TOKENS = 300
 
 # Maximum tokens to process in one run (API limit protection)
 MAX_TOKENS_TO_PROCESS = 500
