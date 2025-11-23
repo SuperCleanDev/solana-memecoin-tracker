@@ -193,15 +193,44 @@ with col2:
                 st.markdown("---")
                 st.subheader("📊 Summary Report")
                 
-                # Summary metrics
-                col_metric1, col_metric2, col_metric3 = st.columns(3)
-                
-                with col_metric1:
-                    st.metric(
-                        "Total Tokens Analyzed",
-                        summary['total_tokens_analyzed'],
-                        delta=None
-                    )
+                # Check if any tokens were found
+if summary.get('total_tokens_analyzed', 0) == 0:
+    st.warning("⚠️ No tokens found in this time range!")
+    
+    if 'warning' in summary:
+        st.info(summary['warning'])
+    
+    st.markdown("""
+    ### 🔧 Troubleshooting:
+    
+    1. **Try a different date:**
+       - Bitquery free tier may have 24-48h delay
+       - Try dates from **2-3 days ago**
+    
+    2. **Check your time range:**
+       - Use "Prime Time (14:00-22:00 UTC)" preset
+       - Most tokens launch during these hours
+    
+    3. **Verify Bitquery token:**
+       - Make sure your API token is valid
+       - Test it at https://graphql.bitquery.io/ide
+    
+    4. **Check Bitquery status:**
+       - API might be temporarily down
+       - Try again in 5-10 minutes
+    """)
+    
+    st.stop()
+
+# Summary metrics
+col_metric1, col_metric2, col_metric3 = st.columns(3)
+
+with col_metric1:
+    st.metric(
+        "Total Tokens Analyzed",
+        summary['total_tokens_analyzed'],
+        delta=None
+    )
                 
                 with col_metric2:
                     st.metric(
